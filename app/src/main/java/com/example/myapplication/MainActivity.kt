@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.widget.TextView
 import android.widget.Toast
 import java.util.jar.Manifest
 
@@ -22,6 +23,8 @@ class MainActivity : AppCompatActivity() {
     private var locationGps : Location? = null
     private var locationNetwork : Location? = null
 
+
+    // Permissions that need to be agreed
     private var permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.INTERNET)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         getLocation()
     }
 
+    // Retrieves GPS location if it's more accurate than Network connection, if not, returns network location
     @SuppressLint("MissingPermission")
     private fun getLocation() {
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -101,13 +105,22 @@ class MainActivity : AppCompatActivity() {
                 if(locationGps!!.accuracy > locationNetwork!!.accuracy) {
                     Log.d("CodeAndroidLocation", "Network latitude: " + locationNetwork!!.latitude)
                     Log.d("CodeAndroidLocation", "Network longitude: " + locationNetwork!!.longitude)
+                    val text : TextView = findViewById(R.id.text)
+                    text.append("\nNetwork :")
+                    text.append("\nLatitude: " + locationNetwork!!.latitude)
+                    text.append("\nLongitude : " + locationNetwork!!.longitude)
                 } else {
                     Log.d("CodeAndroidLocation", "GPS latitude: " + locationGps!!.latitude)
                     Log.d("CodeAndroidLocation", "GPS longitude: " + locationGps!!.longitude)
+                    val text : TextView = findViewById(R.id.text)
+                    text.append("\nGps :")
+                    text.append("\nLatitude: " + locationGps!!.latitude)
+                    text.append("\nLongitude : " + locationGps!!.longitude)
                 }
             }
         } else {
             startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
         }
+
     }
 }
